@@ -1,0 +1,16 @@
+{
+  "{0} context window in tokens": "{0} 上下文窗口大小（token 数）",
+  "{0} reasoning effort support": "{0} 推理强度支持情况",
+  "Select everything born in {0}": "全选诞生于 {0} 的内容",
+  "Version {0} · update required": "版本 {0} · 需要更新",
+  "Deepgram connection lost ({0})": "Deepgram 连接中断（{0}）",
+  "Done picking — {0} {1} selected": "已选定，共 {0} 个{1}",
+  "Parent folder no longer exists.": "父文件夹已不存在。",
+  "Scanned pages may have errors.{0}": "扫描页面可能存在错误。{0}",
+  "[Image attached to the model: {0}]": "[图片已附给模型：{0}]",
+  "Requires LearnHarness {0} or newer": "需要 LearnHarness {0} 或更高版本",
+  "Reply interrupted before completion": "回复在完成前中断",
+  "Deepgram token grant failed ({0}): {1}": "Deepgram 令牌获取失败（{0}）：{1}",
+  " Retry it or send a message to continue.": " 重试，或发一条消息继续。",
+  "Only the named empty folders are removed. ": "只删除上面列出的空文件夹。"
+}

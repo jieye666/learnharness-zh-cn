@@ -1,0 +1,20 @@
+{
+  "Explain": "讲解",
+  "Answer": "回答",
+  "Working": "处理中",
+  "Multilingual": "多语言",
+  "auto update": "自动更新",
+  "correct": "答对",
+  "incorrect": "答错",
+  "didn't know": "不知道",
+  "Question · next row": "提问 · 下一行",
+  "Question · previous row": "提问 · 上一行",
+  "Question · pick row": "提问 · 选中该行",
+  "Question · submit": "提问 · 提交",
+  "Speech-to-text key for dictation — needs ≥ Member permission in the Deepgram console to mint tokens.": "语音输入用的语音转文字密钥——需在 Deepgram 控制台拥有 Member 或更高权限才能签发令牌。",
+  "Web-search engine for the researcher sub-agent (AI-native search API). Setting the key activates it — no engine toggle needed.": "研究者子智能体用的网页搜索服务（AI 原生搜索 API）。填上密钥即启用，不用另外开关。",
+  "Web-search engine for the researcher sub-agent — the alternative to Tavily. Setting the key activates it.": "研究者子智能体用的网页搜索服务，Tavily 的替代方案。填上密钥即启用。",
+  "Web-search engine for the researcher. Search requests use your Exa account and its pricing.": "研究者用的网页搜索服务。搜索请求走你自己的 Exa 账户，按其定价计费。",
+  "Web-search engine for the researcher sub-agent — an alternative to Tavily and Brave. Setting the key activates it.": "研究者子智能体用的网页搜索服务，Tavily、Brave 的替代方案。填上密钥即启用。",
+  "Hosted web search at ollama.com — requires an Ollama API key. Setting it activates search, not local models.": "ollama.com 提供的在线网页搜索——需要 Ollama API 密钥。填上只启用搜索，不启用本地模型。"
+}
