@@ -1174,5 +1174,11 @@
 	"Review": "复习",
 	"Cue": "提示卡",
 	"Archive": "归档",
-	"Overdue": "逾期"
+	"Overdue": "逾期",
+	"Image scale": "图像缩放比例",
+	"Six-digit hex color. Recolors all unsent ink when this app theme mode is active.": "六位十六进制颜色。切换应用主题模式时，会重新着色所有未发送的笔迹。",
+	"Export percentage (default 50%). Applied before the fixed 2000 × 2000 pixel cap. Does not change the drawing surface.": "导出百分比（默认 50%）。在固定的 2000 × 2000 像素上限之前生效，不改变绘图区域。",
+	"Coding question": "编程题",
+	"Undo drawing": "撤销绘制",
+	"Toggle pen/eraser": "切换画笔与橡皮"
 }

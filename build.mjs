@@ -14,7 +14,7 @@ const manifest = {
 	apiVersion: 1,
 	id: 'zh-cn-language-pack',
 	name: '简体中文语言包',
-	version: '1.2.1',
+	version: '1.2.2',
 	minAppVersion: '0.6.1',
 	description: '把 LearnHarness 界面文案替换为简体中文。纯前端注入，不改动应用文件，随开随用。',
 	author: 'LearnHarness 中文社区',
