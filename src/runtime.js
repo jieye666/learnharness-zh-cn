@@ -121,10 +121,16 @@ const TOOL_NAMES = { research: '检索', demo: '演示', visual: '看图', pdf: 
 const nounZh = (w) => NOUNS[w] ?? w;
 
 /** 手写规则：整串形态固定、词表放不下的动态文案 */
+function inner(text) {
+	return DICT[text] ?? text;
+}
+
 const EXTRA_RULES = [
 	{ re: /^Version (\d[\w.+-]*)$/, to: (m) => `版本 ${m[1]}` },
 	{ re: /^Tool · ([a-z-]+)$/, to: (m) => `工具 · ${TOOL_NAMES[m[1]] ?? m[1]}` },
 	{ re: /^Plan · (\d+) nodes?$/, to: (m) => `计划 · ${m[1]} 个节点` },
+	{ re: /^Settings for (.+)$/, to: (m) => `${inner(m[1])}的设置` },
+	{ re: /^Enable (.+)$/, to: (m) => `启用 ${inner(m[1])}` },
 	{ re: /^Done picking — (\d[\d,]*)\s+([a-z]+) selected$/, to: (m) => `已选定，共 ${m[1]} ${nounZh(m[2])}` },
 	{ re: /^(\d[\d,]*)\s+([a-z]+) selected$/, to: (m) => `已选中 ${m[1]} ${nounZh(m[2])}` },
 	{ re: /^(\d[\d,]*)\s+([a-z]+) unextracted$/, to: (m) => `${m[1]} ${nounZh(m[2])}未提取` },
