@@ -4,3 +4,4 @@ tools/shards/
 *.zip
 .DS_Store
 CON
+tools/e2e-out/

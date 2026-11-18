@@ -1,11 +1,14 @@
 {
-	"name": "learnharness-zh-cn-language-pack",
-	"version": "1.1.0",
-	"private": true,
-	"type": "module",
-	"description": "LearnHarness 简体中文语言包（社区插件）",
-	"scripts": {
-		"build": "node build.mjs",
-		"sweep": "node tools/sweep2.mjs"
-	}
+  "name": "learnharness-zh-cn-language-pack",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "LearnHarness 简体中文语言包（社区插件）",
+  "scripts": {
+    "build": "node build.mjs",
+    "sweep": "node tools/sweep2.mjs"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^24.10.0"
+  }
 }

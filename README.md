@@ -6,7 +6,7 @@ MIT License · 适配 LearnHarness 0.6.1+ · 纯前端注入，不改应用文�
 
 - 不改动应用任何文件，纯前端运行时替换，卸载即恢复原样。
 - 通过公开的插件 API（`apiVersion: 1`）加载，用的是插件 `main.js` 在应用窗口里的正常 DOM 权限，不需要改打包产物、不注入宿主代码。
-- 词表 **1182 条**，覆盖侧边栏、首页、设置全部十个分区、插件页（含核心插件卡片名与说明、插件设置页）、确认框、空态、错误提示、快捷键名；连单单词按钮（保存/中止/提交/已复制）、状态徽章（运行中/已解出/已绑定）、相对时间（5 分钟前）、数量与名词（3 个节点、已选中 3 个节点）、拼出来的句子（版本 0.6.1、工具 · 检索）都在内。
+- 词表 **1196 条**，覆盖侧边栏、首页、设置全部十个分区、插件页（含核心插件卡片名与说明、插件设置页）、确认框、空态、错误提示、快捷键名；连单单词按钮（保存/中止/提交/已复制）、状态徽章（运行中/已解出/已绑定）、相对时间（5 分钟前）、数量与名词（3 个节点、已选中 3 个节点）、拼出来的句子（版本 0.6.1、工具 · 检索）都在内。
 
 ![核心插件](screenshots/core-plugins-1.2.2.png)
 ![绘图板设置](screenshots/plugin-drawing-pad-1.2.2.png)
@@ -25,7 +25,7 @@ git clone https://github.com/jieye666/learnharness-zh-cn "<插件目录>/zh-cn-l
 Windows 一行：
 
 ```powershell
-git clone https://github.com/jieye666/learnharness-zh-cn "$env:APPDATALearnHarnessdatapluginszh-cn-language-pack"
+git clone https://github.com/jieye666/learnharness-zh-cn "$env:APPDATA\LearnHarness\data\plugins\zh-cn-language-pack"
 ```
 
 clone 下来仓库根目录里就有 `dist/`，布局正好是 `<插件目录>/zh-cn-language-pack/dist/{main.js,manifest.json}`。
@@ -91,6 +91,8 @@ tools/check-jsx-props.mjs  同上，看 label/title/placeholder 等属性位置
 tools/check-coverage.mjs   拿 SSR HTML 体检：还剩哪些英文没译
 /tools/test-runtime.mjs     运行时单测（模板/时间/量词/复数）
 tools/merge-extras.mjs      合并 sources/*.json，冲突会打印出来让人裁决
+tools/e2e-headless.mjs      无头端到端测试：起服务 + headless Chrome 逐个打开设置分区，报英文残留
+tools/scan-e2e-out.mjs      把上一步抓下来的文本里「词表没收录的英文行」列出来
 ```
 
 改完词表后：
@@ -99,17 +101,39 @@ tools/merge-extras.mjs      合并 sources/*.json，冲突会打印出来让人�
 node tools/merge-extras.mjs --write   # 如果改了 sources/ 里的分片
 node build.mjs
 node tools/check-jsx-text.mjs         # 确认没有漏网的可见文案
+node tools/e2e-headless.mjs           # 无头跑一遍真实界面（不需要弹窗口、不动鼠标）
 ```
 
 然后把 `dist/` 重新复制到插件目录，**重启应用**（已加载的插件代码不会热更）。
 
 这些检查工具需要一个 LearnHarness 源码检出，路径写死在文件顶部（`SRC`），按需改。
 
+## 无头端到端测试
+
+弹窗口截图靠不住（DPI 缩放、抢不到焦点、点错位置）。本仓库改为无头验证：`node tools/e2e-headless.mjs`
+
+它做四件事：
+
+1. 用 `node server.js` 起一个独立应用服务（随机/指定端口，数据目录指向本机 LearnHarness 的 `data`，所以插件是启用状态）；
+2. 用 headless Chrome（`puppeteer-core` + 本机 Chrome，不下载浏览器）打开界面；
+3. 点侧边栏「设置」，然后逐个点开 **服务商 / 智能体 / 外观 / 图谱 / 快捷键 / 通用 / 核心插件 / 社区插件 / 编程题 / 绘图板 / 闪卡 / 富文本代码块**，把每页文本抓下来存到 `tools/e2e-out/*.txt`；
+4. 用白名单（品牌名、主题名、字体名、按键名、路径）过滤后，报每页还剩哪些英文，退出码 0 = 干净、2 = 有残留。
+
+```
+node tools/e2e-headless.mjs                 # 全量检查
+node tools/e2e-headless.mjs --keep          # 不杀服务进程（调试用）
+node tools/e2e-headless.mjs --screenshot out.png
+node tools/scan-e2e-out.mjs                 # 列出抓下来的文本里未收录的英文行
+```
+
+当前结果：11 个分区全部通过（无英文残留）。这套测试是补译的主力 —— 它一上线就抓到 5 类点击截图发现不了的漏译：插件卡片 `1.2.2 · Enabled`、核心插件设置页三个开关标签、快捷键分组名、外观页的 `COLORS / DARK / LIGHT / Empty = #…`、智能体页的 `Used by Teacher and Prober`。
+
 ## 覆盖情况（0.6.1 源码实测）
 
 - 首页 `/` 与新建会话页 `/chat/new` 的 SSR HTML：除 `Learning Harness`（品牌）、TURBOPACK 引导代码、SVG path 外无英文。
 - 源码里 JSX 文本子节点 315 处英文：仅剩 21 处是代码片段与品牌名。
 - JSX 属性位置 256 处英文：仅剩 ChatGPT、Claude Code 两个品牌名。
+- 无头 e2e（headless Chrome 真实渲染）：设置全部 11 个分区无英文残留。
 
 ## 已知限制
 

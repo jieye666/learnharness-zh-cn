@@ -135,6 +135,18 @@ const EXTRA_RULES = [
 	{ re: /^(\d[\d,]*)\s+([a-z]+) selected$/, to: (m) => `已选中 ${m[1]} ${nounZh(m[2])}` },
 	{ re: /^(\d[\d,]*)\s+([a-z]+) unextracted$/, to: (m) => `${m[1]} ${nounZh(m[2])}未提取` },
 	{ re: /^read (\d+) pages?$/, to: (m) => `已读 ${m[1]} 页` },
+	// Empty = #141414 / Empty = Source Sans 3
+	{ re: /^Empty = (.+)$/, to: (m) => `空 = ${m[1]}` },
+	// Used by Teacher and Prober / Used by Teacher, Prober and Practice
+	{ re: /^Used by (.+)$/, to: (m) => {
+		const { text, touched } = rolesZh(m[1]);
+		return touched ? `被 ${text} 使用` : null;
+	} },
+	// 主题编辑器里 "名称 · dark · 决定下方所有颜色" 这类拼接串
+	{ re: /^(.*?) · (dark|light) · (.*)$/, to: (m) => {
+		const mode = m[2] === 'dark' ? '深色' : '浅色';
+		return `${inner(m[1])} · ${mode} · ${inner(m[3])}`;
+	} },
 	{ re: /^(\d[\d,]*)\s+([a-z]+)$/, to: (m) => (NOUNS[m[2]] ? `${m[1]} ${NOUNS[m[2]]}` : null) },
 ];
 
@@ -191,7 +203,22 @@ const FRAGMENTS = (() => {
 	return out;
 })();
 
-function translate(raw) {
+/** 角色/成员名，用于把 "Teacher and Prober" 这类拼串翻译出来 */
+const ROLES = { Teacher: '老师', Prober: '探底器', Practice: '练习', Teaching: '教学' };
+
+function rolesZh(text) {
+	const parts = text.split(/\s*,\s*|\s+and\s+/).map(s => s.trim()).filter(Boolean);
+	let touched = false;
+	const out = parts.map(p => {
+		if (ROLES[p]) { touched = true; return ROLES[p]; }
+		const t = DICT[p];
+		if (typeof t === 'string') { touched = true; return t; }
+		return p;
+	});
+	return { text: out.join('、'), touched };
+}
+
+function translate(raw, depth = 0) {
 	if (!raw) return null;
 	const key = raw.trim();
 	if (!key) return null;
@@ -239,6 +266,22 @@ function translate(raw) {
 			const lead = raw.slice(0, raw.length - raw.trimStart().length);
 			const trail = raw.slice(raw.trimEnd().length);
 			return `${lead}${counted[1]} ${noun}${trail}`;
+		}
+	}
+
+	// 分段翻译：「1.2.2 · Enabled」「COLORS · overrides on top of …」「Teaching · Practice」
+	if (depth < 3 && key.includes(' · ')) {
+		const parts = key.split(' · ');
+		let touched = false;
+		const out = parts.map(part => {
+			const t = translate(part, depth + 1);
+			if (typeof t === 'string' && t !== part) touched = true;
+			return typeof t === 'string' ? t : part;
+		});
+		if (touched) {
+			const lead = raw.slice(0, raw.length - raw.trimStart().length);
+			const trail = raw.slice(raw.trimEnd().length);
+			return lead + out.join(' · ') + trail;
 		}
 	}
 

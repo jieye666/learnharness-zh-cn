@@ -1180,5 +1180,19 @@
 	"Export percentage (default 50%). Applied before the fixed 2000 × 2000 pixel cap. Does not change the drawing surface.": "导出百分比（默认 50%）。在固定的 2000 × 2000 像素上限之前生效，不改变绘图区域。",
 	"Coding question": "编程题",
 	"Undo drawing": "撤销绘制",
-	"Toggle pen/eraser": "切换画笔与橡皮"
+	"Toggle pen/eraser": "切换画笔与橡皮",
+	"dark": "深色",
+	"light": "浅色",
+	"COLORS": "颜色",
+	"· overrides on top of the theme, kept when you switch": "· 覆盖在主题之上，切换主题时保留",
+	"overrides on top of the theme, kept when you switch": "覆盖在主题之上，切换主题时保留",
+	"Draw": "绘制",
+	"Chemical structures": "化学结构",
+	"Musical notation": "乐谱",
+	"Technical diagrams": "技术图示",
+	"no search engine configured — set a Tavily, Brave, Exa, Firecrawl, or Ollama search API key": "尚未配置搜索引擎 —— 设置 Tavily、Brave、Exa、Firecrawl 或 Ollama 的搜索密钥",
+	"Muted": "次要文字",
+	"Ink": "文字色",
+	"Colors": "颜色",
+	"Follow theme": "跟随主题"
 }
