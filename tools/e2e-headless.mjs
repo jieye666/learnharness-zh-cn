@@ -27,7 +27,7 @@ const ALLOW = [
 	'Catppuccin', 'Gruvbox', 'NvChad', 'Ivory', 'Pastel', 'Pine', 'Ros', 'Latte', 'Frapp',
 	'Macchiato', 'Mocha', 'Onedark', 'Dawn', 'Source Sans', 'Aa ai', 'Member', 'Ctrl', 'Shift',
 	'Alt', 'Meta', 'Space', 'Tab', 'Enter', 'Esc', 'Users', 'AppData', 'Roaming', 'LENOVO',
-	'PDF', 'MD',
+	'PDF', 'MD', 'CCO', 'smiles', 'abc', 'tikz',
 ];
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));

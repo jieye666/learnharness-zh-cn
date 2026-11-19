@@ -35,7 +35,8 @@ try {
 	await page.evaluate(() => [...document.querySelectorAll('button,a')].find(el => (el.innerText || '').trim() === '设置')?.click());
 	await sleep(1000);
 	const ok = await page.evaluate(n => {
-		const el = [...document.querySelectorAll('button,a,[role="tab"],[role="button"]')].find(e => (e.innerText || '').trim() === n);
+		const dialog = document.querySelector('[role="dialog"]') || document;
+		const el = [...dialog.querySelectorAll('button,a,[role="tab"],[role="button"]')].find(e => (e.innerText || '').trim() === n);
 		el?.click();
 		return Boolean(el);
 	}, SECTION);

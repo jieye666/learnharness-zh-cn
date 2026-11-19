@@ -1326,6 +1326,8 @@ function inner(text) {
 }
 
 const EXTRA_RULES = [
+	// 插件设置页的 aria-label 由 `${name} settings` 拼出（components/settings/plugin-settings-page.tsx:17）
+	{ re: /^(.+) settings$/, to: (m) => `${inner(m[1])} 设置` },
 	{ re: /^Version (\d[\w.+-]*)$/, to: (m) => `版本 ${m[1]}` },
 	{ re: /^Tool · ([a-z-]+)$/, to: (m) => `工具 · ${TOOL_NAMES[m[1]] ?? m[1]}` },
 	{ re: /^Plan · (\d+) nodes?$/, to: (m) => `计划 · ${m[1]} 个节点` },
@@ -1570,6 +1572,70 @@ function walk(root) {
 	while (walker.nextNode()) nodes.push(walker.currentNode);
 	for (const node of nodes) doText(node);
 	walkAttributes(root);
+	annotate(root);
+}
+
+/**
+ * 中文注释：有些设置项译成中文仍然看不出在说什么（化学结构 / 乐谱 / 目标记忆保持率…）。
+ * 这里按「译后的标签文本」匹配，在标签下面补一行小字解释。只加不改，禁用插件时一并移除。
+ */
+const HINTS = {
+	'化学结构': '开启后，标了 smiles 的代码块会渲染成分子结构式（例如 CCO 是乙醇）',
+	'乐谱': '开启后，标了 abc 的代码块会渲染成五线谱（ABC 记谱法）',
+	'技术图示': '开启后，标了 tikz 的代码块会渲染成矢量示意图（流程图、几何图等）',
+	'目标记忆保持率（%）': '每次复习后，按这个概率把卡片安排到更晚的复习时间；数值越高，复习越频繁',
+	'学习步骤（分钟）': '新卡片在这几个时间点重现（分钟，逗号分隔），用来快速记牢',
+	'重新学习步骤（分钟）': '答错的卡片按这几个间隔重新出现，直到答对',
+	'一天从几点开始（小时）': '凌晨几点算第二天，方便熬夜学习时统计不错乱（默认 4 点）',
+	'生成分块预算（估算 token 数）': '生成卡片时一次喂给模型多少内容，越大越省调用次数，但太大会漏细节',
+	'提取分块预算': '长文档按这个大小切块再从中提取知识点，越大越省调用次数，但容易漏掉细节',
+	'压缩阈值': '会话上下文超过这个 token 数就自动压缩历史，避免超出模型上限',
+	'深度锚点': '图谱布局里按深度分层的基准，调大会让层级拉得更开',
+};
+
+let annotating = false;
+
+function insertHint(el, text) {
+	const wrap = el.parentElement;
+	if (!wrap || wrap.querySelector(':scope > .lh-hint')) return;
+	const hint = document.createElement('span');
+	hint.className = 'lh-hint';
+	hint.textContent = text;
+	hint.setAttribute('lang', 'zh-CN');
+	hint.style.display = 'block';
+	hint.style.marginTop = '0.125rem';
+	hint.style.fontSize = '0.6875rem';
+	hint.style.lineHeight = '1.5';
+	hint.style.color = 'var(--lh-muted-foreground, rgb(120 118 112))';
+	hint.style.opacity = '0.9';
+	wrap.appendChild(hint);
+}
+
+/** 只在「设置行」里补注释：往上找带控件的容器，避免把导航项也加上说明 */
+function findRow(el) {
+	let node = el.parentElement;
+	for (let depth = 0; node && depth < 5; depth++, node = node.parentElement) {
+		if (node.matches('nav, aside, header, footer, [role="navigation"]')) return null;
+		if (node.querySelector('button[role="switch"], input, select, textarea, [role="combobox"], button[aria-checked]')) return node;
+	}
+	return null;
+}
+
+function annotate(root) {
+	if (annotating || !root?.querySelectorAll) return;
+	annotating = true;
+	try {
+		for (const el of root.querySelectorAll('span, div, p, label, dt, h4')) {
+			if (el.children.length || el.classList.contains('lh-hint')) continue;
+			const text = (el.textContent || '').trim();
+			const hint = HINTS[text];
+			if (!hint) continue;
+			if (!findRow(el)) continue;
+			insertHint(el, hint);
+		}
+	} finally {
+		annotating = false;
+	}
 }
 
 function doTitle() {
@@ -1583,7 +1649,10 @@ export function activate() {
 	doTitle();
 
 	// React 常在挂载后才写入 placeholder/title，单靠 MutationObserver 会漏，定期重扫属性
-	const attrTimer = setInterval(() => walkAttributes(document.body), 1200);
+	const attrTimer = setInterval(() => {
+		walkAttributes(document.body);
+		annotate(document.body);
+	}, 1200);
 	observerCleanup.push(() => clearInterval(attrTimer));
 
 	const observer = new MutationObserver((records) => {
@@ -1628,6 +1697,7 @@ export function activate() {
 			}
 		}
 		undo.clear();
+		for (const hint of document.querySelectorAll(".lh-hint")) hint.remove();
 	};
 }
 
