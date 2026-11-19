@@ -1,0 +1,11 @@
+{
+  "Checks installation/version only—not authentication, model access, or quota. Claude Code controls billing. Requires v": "只检查安装与版本，不检查登录状态、模型可用性与额度。计费由 Claude Code 自己负责。需要 v",
+  "Version {0} · meets minimum": "版本 {0} · 满足最低要求",
+  "Version {0} · update required": "版本 {0} · 需要更新",
+  "Version could not be checked": "无法检查版本",
+  "Could not load Claude Code settings.": "无法加载 Claude Code 设置。",
+  "Could not save Claude Code settings.": "无法保存 Claude Code 设置。",
+  "Cyclic SVG references are not supported.": "不支持循环引用的 SVG。",
+  "The TeX render queue is full (16 waiting jobs).": "TeX 渲染队列已满（还有 16 个任务排队）。",
+  "Install and authenticate Claude Code in your terminal, then select a Claude Code model here.": "先在终端里安装并登录 Claude Code，然后在这里选择一个 Claude Code 模型。"
+}

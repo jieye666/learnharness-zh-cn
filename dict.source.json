@@ -1194,5 +1194,8 @@
 	"Muted": "次要文字",
 	"Ink": "文字色",
 	"Colors": "颜色",
-	"Follow theme": "跟随主题"
+	"Follow theme": "跟随主题",
+	"Checks installation/version only—not authentication, model access, or quota. Claude Code controls billing. Requires v": "只检查安装与版本，不检查登录状态、模型可用性与额度。计费由 Claude Code 自己负责。需要 v",
+	"Cyclic SVG references are not supported.": "不支持循环引用的 SVG。",
+	"The TeX render queue is full (16 waiting jobs).": "TeX 渲染队列已满（还有 16 个任务排队）。"
 }
