@@ -150,3 +150,17 @@ MIT，见 [LICENSE](LICENSE)。
 ## 反馈
 
 LearnHarness 本身的问题请提到 [上游仓库](https://github.com/amosblomqvist/learnharness/issues)；这个语言包的漏译、错译提到本仓库的 Issues，附上截图和所在界面最快。
+
+## 常见问题：Claude Code 显示「未找到 / Not found」
+
+LearnHarness 只认 `claude.exe`（`src/agent/claude-code/binary.ts` 的 Windows 搜索规格 `names: ["claude.exe"]`），
+而 `npm i -g @anthropic-ai/claude-code` 只装出 `claude.cmd` / `claude.ps1`，所以状态永远是「未找到」，
+也就选不到 Claude Code 模型。npm 包自带真正的二进制，建个硬链接即可：
+
+```powershell
+New-Item -ItemType HardLink `
+  -Path   "$env:APPDATA\npm\claude.exe" `
+  -Target "$env:APPDATA\npm\node_modules\@anthropic-ai\claude-code\bin\claude.exe"
+```
+
+（`%APPDATA%\npm` 是 LearnHarness 的已知查找目录之一。）重启应用后状态会变成「版本 x.y.z · 满足最低要求」。
